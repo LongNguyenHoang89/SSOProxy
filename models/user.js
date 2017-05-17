@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 
-module.exports = mongoose.model('User',{
-	fb: {
-		id: String,
-		access_token: String,
-		name: String,
-		email: String
-	},
+module.exports = mongoose.model('User', {
+  oauthID: Number,
+  access_token: String,
+  name: String,
+  username: String,
+  provider: String,
 });

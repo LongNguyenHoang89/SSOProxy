@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  div.text-center
+    a.fa.fa-home.fa-3x(href='/')
+    h1.login-title Welcome #{user.name}.
+  div.container
+    p Check your details :
+    ul
+      li Username ---> #{user.username}
+      li Provider ---> #{user.provider}
+      li CONIKS registration status ---> #{coniks_message}
+  div.text-center
+    a(href='/coniks') Register to CONIKS
+    br
+    a(href='/signout') Sign Out
