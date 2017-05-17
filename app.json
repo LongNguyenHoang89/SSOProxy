@@ -1,0 +1,16 @@
+[{
+  "name": "SSOProxy",
+  "script": "app.js",
+  "log_date_format": "YYYY-MM-DD HH:mm Z",
+  "merge_logs": false,
+  "watch": false,
+  "exec_mode": "fork_mode",
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": 8080,
+    "CONIKSCLIENT_PORT": 3001
+  },
+  "env_production": {
+    "NODE_ENV": "production"
+  }
+}]
