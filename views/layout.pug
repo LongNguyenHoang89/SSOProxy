@@ -9,4 +9,6 @@ html
   body
     .text-center
       a.fa.fa-home.fa-3x(href='/')
+      if isLoggedIn
+        a.fa.fa-sign-out.fa-3x(href='/signout')
     block content
