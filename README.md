@@ -14,7 +14,9 @@ npm install
 
 ### Other dependency
 
-- MongoDB (2.x or later)
+- MongoDB (2.x or later) (see https://www.mongodb.com/download-center?jmp=nav or use your GNU/Linux package manager)
+
+(No need to create manually the database)
 
 ## Launch it
 Install PM2 (see https://github.com/Unitech/pm2, basically run `npm install pm2 -g` to install it system-wide) and run :
