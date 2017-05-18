@@ -1,9 +1,9 @@
 // load all the things we need
-var FacebookStrategy = require('passport-facebook').Strategy;
-var GithubStrategy = require('passport-github2').Strategy;
-var TwitterStrategy = require('passport-twitter').Strategy;
-var User = require('../models/user');
-var configAuth = require('./auth');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const GithubStrategy = require('passport-github2').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
+const User = require('../models/user');
+const configAuth = require('./auth');
 
 module.exports = function (passport) {
   // used to serialize the user for the session
@@ -25,7 +25,7 @@ module.exports = function (passport) {
     // pull in our app id and secret from our auth.js file
     clientID: configAuth.facebookAuth.clientID,
     clientSecret: configAuth.facebookAuth.clientSecret,
-    callbackURL: configAuth.facebookAuth.callbackURL
+    callbackURL: configAuth.facebookAuth.callbackURL,
   },
   // facebook will send back the token and profile
   function (token, refreshToken, profile, done) {
@@ -50,7 +50,7 @@ module.exports = function (passport) {
             console.log('cannot find user, insert new');
           }
           // if there is no user found with that facebook id, create them
-          var newUser = new User();
+          let newUser = new User();
 
           // set all of the facebook information in our user model
           newUser.oauthID = profile.id; // set the users facebook id
@@ -78,7 +78,7 @@ module.exports = function (passport) {
     // pull in our app id and secret from our auth.js file
     clientID: configAuth.githubAuth.clientID,
     clientSecret: configAuth.githubAuth.clientSecret,
-    callbackURL: configAuth.githubAuth.callbackURL
+    callbackURL: configAuth.githubAuth.callbackURL,
   },
   // Github will send back the token and profile
   function (token, refreshToken, profile, done) {
@@ -103,7 +103,7 @@ module.exports = function (passport) {
             console.log('cannot find user, insert new');
           }
           // if there is no user found with that Github id, create them
-          var newUser = new User();
+          let newUser = new User();
 
           // set all of the Github information in our user model
           newUser.oauthID = profile.id; // set the users Github id
@@ -132,7 +132,7 @@ module.exports = function (passport) {
     // pull in our app id and secret from our auth.js file
     consumerKey: configAuth.twitterAuth.clientID,
     consumerSecret: configAuth.twitterAuth.clientSecret,
-    callbackURL: configAuth.twitterAuth.callbackURL
+    callbackURL: configAuth.twitterAuth.callbackURL,
   },
   // Github will send back the token and profile
   function (token, refreshToken, profile, done) {
@@ -158,7 +158,7 @@ module.exports = function (passport) {
             console.log('cannot find user, insert new');
           }
           // if there is no user found with that Github id, create them
-          var newUser = new User();
+          let newUser = new User();
 
           // set all of the Github information in our user model
           newUser.oauthID = profile.id; // set the users Github id

@@ -1,10 +1,10 @@
 //see https://github.com/tutsplus/passport-social/blob/master/routes/index.js
 
-var express = require('express');
-var router = express.Router();
-var http = require('http')
+const express = require('express');
+const router = express.Router();
+const http = require('http')
 
-var isAuthenticated = function (req, res, next) {
+const isLoggedIn = function (req, res, next) {
   // if user is authenticated in the session, call the next() to call the next request handler Passport adds this method
   // to request object. A middleware is allowed to add properties to request and response objects
   if (req.isAuthenticated())
@@ -24,12 +24,13 @@ module.exports = function (passport) {
     next();
   });
   router.get('/', function (req, res) {
-    // Display the Login page with any flash message, if any
-    res.render('index', {message: req.flash('message')});
+    if (req.isAuthenticated()) {
+      res.redirect('/profile')
+    }
+    res.render('index');
   });
 
-  /* GET Home Page */
-  router.get('/profile', isAuthenticated, function (req, res) {
+  router.get('/profile', isLoggedIn, function (req, res) {
     var postData = `lookup ${req.user.username}@${req.user.provider}`
     var options = {
       hostname: 'localhost',
@@ -38,10 +39,10 @@ module.exports = function (passport) {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
-        'Content-Length': Buffer.byteLength(postData)
-      }
+        'Content-Length': Buffer.byteLength(postData),
+      },
     };
-    let coniks_req = http.request(options, (coniks_res) => {
+    var coniks_req = http.request(options, (coniks_res) => {
       coniks_res.setEncoding('utf8');
       let message = ''
       coniks_res.on('data', (chunk) => {
@@ -61,7 +62,7 @@ module.exports = function (passport) {
         }
         res.render('profile', {
           user: req.user,
-          coniks_message: message
+          coniks_message: message,
         });
       });
     });
@@ -84,7 +85,7 @@ module.exports = function (passport) {
       let message = "The CONIKS Client is down, cannot know if you are already registered ..."
       res.render('profile', {
         user: req.user,
-        coniks_message: message
+        coniks_message: message,
       });
     });
 
@@ -95,15 +96,16 @@ module.exports = function (passport) {
   });
 
   /* Handle Coniks registration */
-  router.get('/coniks', isAuthenticated, function (req, res) {
+  router.get('/coniks', isLoggedIn, function (req, res) {
     res.render('coniks', {
       username: req.user.username,
-      provider: req.user.provider
+      provider: req.user.provider,
     });
   });
 
   /* Handle Logout */
   router.get('/signout', function (req, res) {
+    // req.session.destroy()
     req.logout();
     res.redirect('/');
   });
@@ -114,7 +116,7 @@ module.exports = function (passport) {
   // handle the callback after facebook has authenticated the user
   router.get('/auth/facebook/callback', passport.authenticate('facebook', {
     successRedirect: '/profile',
-    failureRedirect: '/'
+    failureRedirect: '/',
   }));
 
   // route for facebook authentication and login different scopes while logging in
@@ -123,7 +125,7 @@ module.exports = function (passport) {
   // handle the callback after github has authenticated the user
   router.get('/auth/github/callback', passport.authenticate('github', {
     successRedirect: '/profile',
-    failureRedirect: '/'
+    failureRedirect: '/',
   }));
 
   // route for facebook authentication and login different scopes while logging in
@@ -132,7 +134,7 @@ module.exports = function (passport) {
   // handle the callback after github has authenticated the user
   router.get('/auth/twitter/callback', passport.authenticate('twitter', {
     successRedirect: '/profile',
-    failureRedirect: '/'
+    failureRedirect: '/',
   }));
 
   return router;
