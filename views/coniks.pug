@@ -5,17 +5,22 @@ block content
   .text-center
     h1.login-title Register to CONIKS
   br
-  form.form-horizontal(name='coniks_form' method='POST' action='' onsubmit='return requestConiksClient()')
-    .form-group
-      label.control-label.col-sm-2(for='username') Username:
-      .col-sm-10
-        input#username.form-control(type='text' name="username" value=`${username}@${provider}` readOnly)
-    .form-group
-      label.control-label.col-sm-2(for='public_key') Public key:
-      .col-sm-10
-        input#public_key.form-control(type='text' name="public_key" placeholder='Your public key ...' value=(undefined===public_key ? '' : public_key) required)
-    .form-group
-      .col-sm-offset-2.col-sm-10
-        button.btn.btn-primary(type='submit') Submit
-  br
-  div#error_div.col-sm-offset-1
+  div.container
+    div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.panel.panel-default
+        div.panel-heading Registration to CONIKS
+        br
+        form.form-horizontal(name='coniks_form' method='POST' action='' onsubmit='return coniksRegister()')
+          .form-group
+            label.control-label.col-sm-2(for='username') Username:
+            .col-sm-8
+              input#username.form-control(type='text' name="username" value=`${username}@${provider}` readOnly)
+          .form-group
+            label.control-label.col-sm-2(for='public_key') Public key:
+            .col-sm-8
+              input#public_key.form-control(type='text' name="public_key" placeholder='Your public key ...' value=(undefined===public_key ? '' : public_key) required)
+          .form-group
+            .col-sm-offset-2.col-sm-2
+              button.btn.btn-primary(type='submit') Submit
+        br
+        div#error_div.col-sm-offset-1

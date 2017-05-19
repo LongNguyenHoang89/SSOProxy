@@ -1,0 +1,18 @@
+/*
+Add new width to Bootstrap CSS
+*/
+@media (min-width: 1900px) {
+  .container {
+    width: 1800px;
+  }
+}
+@media (min-width: 2800px) {
+  .container {
+    width: 2600px;
+  }
+}
+@media (min-width: 5000px) {
+  .container {
+    width: 4600px;
+  }
+}

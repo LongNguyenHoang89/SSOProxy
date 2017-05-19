@@ -1,13 +1,38 @@
 extends layout
 
 block content
+  script(src='/js/coniksLookup.js')
   div.text-center
     h1.login-title Welcome #{user.name}.
+  br
   div.container
-    p Check your details :
-    ul
-      li Username ---> #{user.username}
-      li Provider ---> #{user.provider}
-      li CONIKS registration status ---> #{coniks_message}
-  div.text-center
-    a(href='/coniks') Register to CONIKS
+    div.col-lg-8.col-md-8.col-sm-8.col-xs-8
+      div.panel.panel-default
+        div.panel-heading Your profile
+        br
+        ul
+          li Username ---> #{user.username}
+          li Provider ---> #{user.provider}
+          li CONIKS registration status ---> #{coniks_status.message}
+        div.text-center
+          a(href='/coniks') Register to CONIKS
+        br
+        if coniks_status.isConiksUp && coniks_status.isRegistered
+          div.panel-heading Public key lookup
+          br
+          form.form-horizontal(name='coniks_lookup_form' method='POST' action='' onsubmit='return coniksLookup()')
+            .form-group
+              label.control-label.col-sm-2(for='username') Username:
+              .col-lg-8.col-md-8.col-sm-8.col-xs-8
+                input#username.form-control(type='text' name="username" value='' placeholder='The username ...' )
+            .form-group
+              .col-sm-offset-2.col-lg-1.col-md-1.col-sm-1.col-xs-1
+                button.btn.btn-primary(type='submit') Submit
+          br
+          div#error_div.col-sm-offset-1
+    div.col-lg-4.col-md-4.col-sm-4.col-xs-4
+      div.panel.panel-default
+        div.panel-heading Known Public keys
+        br
+        ul
+          li None

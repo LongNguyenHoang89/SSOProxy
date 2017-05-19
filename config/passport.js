@@ -25,7 +25,7 @@ module.exports = function (passport) {
     // pull in our app id and secret from our auth.js file
     clientID: configAuth.facebookAuth.clientID,
     clientSecret: configAuth.facebookAuth.clientSecret,
-    callbackURL: configAuth.facebookAuth.callbackURL,
+    callbackURL: configAuth.facebookAuth.callbackURL
   },
   // facebook will send back the token and profile
   function (token, refreshToken, profile, done) {
@@ -78,7 +78,7 @@ module.exports = function (passport) {
     // pull in our app id and secret from our auth.js file
     clientID: configAuth.githubAuth.clientID,
     clientSecret: configAuth.githubAuth.clientSecret,
-    callbackURL: configAuth.githubAuth.callbackURL,
+    callbackURL: configAuth.githubAuth.callbackURL
   },
   // Github will send back the token and profile
   function (token, refreshToken, profile, done) {
@@ -132,7 +132,7 @@ module.exports = function (passport) {
     // pull in our app id and secret from our auth.js file
     consumerKey: configAuth.twitterAuth.clientID,
     consumerSecret: configAuth.twitterAuth.clientSecret,
-    callbackURL: configAuth.twitterAuth.callbackURL,
+    callbackURL: configAuth.twitterAuth.callbackURL
   },
   // Github will send back the token and profile
   function (token, refreshToken, profile, done) {

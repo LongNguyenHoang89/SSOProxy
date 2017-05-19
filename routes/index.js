@@ -39,12 +39,14 @@ module.exports = function (passport) {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
-        'Content-Length': Buffer.byteLength(postData),
-      },
+        'Content-Length': Buffer.byteLength(postData)
+      }
     };
     var coniks_req = http.request(options, (coniks_res) => {
       coniks_res.setEncoding('utf8');
       let message = ''
+      let isConiksUp = true;
+      let isRegistered = false;
       coniks_res.on('data', (chunk) => {
         switch (coniks_res.statusCode) {
           case 404:
@@ -52,17 +54,23 @@ module.exports = function (passport) {
             break;
           case 200:
             message = 'You are already registered in CONIKS'
+            isRegistered = true;
             break;
           case 500:
           default:
             message = 'Something strange happened, cannot know if you are registered or not ... '
+            isConiksUp = false;
             if ("production" !== process.env.NODE_ENV) {
               console.log(`CONIKS Client lookup: [${coniks_res.statusCode}] ${chunk}`);
             }
         }
         res.render('profile', {
           user: req.user,
-          coniks_message: message,
+          coniks_status: {
+            isConiksUp: isConiksUp,
+            isRegistered: isRegistered,
+            message: message
+          }
         });
       });
     });
@@ -82,10 +90,16 @@ module.exports = function (passport) {
           console.log(`problem with request: ${err.message}`);
         }
       }
+      let isConiksUp = false;
+      let isRegistered = undefined;
       let message = "The CONIKS Client is down, cannot know if you are already registered ..."
       res.render('profile', {
         user: req.user,
-        coniks_message: message,
+        coniks_status: {
+          isConiksUp: isConiksUp,
+          isRegistered: isRegistered,
+          message: message
+        }
       });
     });
 
@@ -99,7 +113,7 @@ module.exports = function (passport) {
   router.get('/coniks', isLoggedIn, function (req, res) {
     res.render('coniks', {
       username: req.user.username,
-      provider: req.user.provider,
+      provider: req.user.provider
     });
   });
 
@@ -116,7 +130,7 @@ module.exports = function (passport) {
   // handle the callback after facebook has authenticated the user
   router.get('/auth/facebook/callback', passport.authenticate('facebook', {
     successRedirect: '/profile',
-    failureRedirect: '/',
+    failureRedirect: '/'
   }));
 
   // route for facebook authentication and login different scopes while logging in
@@ -125,7 +139,7 @@ module.exports = function (passport) {
   // handle the callback after github has authenticated the user
   router.get('/auth/github/callback', passport.authenticate('github', {
     successRedirect: '/profile',
-    failureRedirect: '/',
+    failureRedirect: '/'
   }));
 
   // route for facebook authentication and login different scopes while logging in
@@ -134,7 +148,7 @@ module.exports = function (passport) {
   // handle the callback after github has authenticated the user
   router.get('/auth/twitter/callback', passport.authenticate('twitter', {
     successRedirect: '/profile',
-    failureRedirect: '/',
+    failureRedirect: '/'
   }));
 
   return router;

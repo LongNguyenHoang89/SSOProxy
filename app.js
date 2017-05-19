@@ -28,7 +28,7 @@ app.use(expressSession({
   cookie: {
     maxAge: 14 * 24 * 60 * 60 * 1000
   },
-  store: new MongoStore({mongooseConnection: mongoose.connection}),
+  store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 app.use(passport.initialize());
 app.use(passport.session());

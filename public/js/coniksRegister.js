@@ -4,7 +4,7 @@ function isAlphanumeric() {
   return pattern.test(text);
 }
 
-function requestConiksClient() {
+function coniksRegister() {
   var isAlphanumerical = this.isAlphanumeric();
   if (!isAlphanumerical) {
     document.getElementById("error_div").innerHTML = `
