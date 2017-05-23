@@ -41,6 +41,7 @@ function coniksRegister() {
       }
       console.log(status);
       console.log(data)
+      document.getElementById("coniks_register_form").reset();
       document.getElementById("error_div").innerHTML = `
         <ul>
           <li>${message}</li>

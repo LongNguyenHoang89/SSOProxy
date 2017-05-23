@@ -20,7 +20,7 @@ block content
         if coniks_status.isConiksUp && coniks_status.isRegistered
           div.panel-heading Public key lookup
           br
-          form.form-horizontal(name='coniks_lookup_form' method='POST' action='' onsubmit='return coniksLookup()')
+          form#coniks_lookup_form.form-horizontal(name='coniks_lookup_form' method='POST' action='' onsubmit='return coniksLookup()')
             .form-group
               label.control-label.col-sm-2(for='username') Username:
               .col-lg-8.col-md-8.col-sm-8.col-xs-8
@@ -34,5 +34,4 @@ block content
       div.panel.panel-default
         div.panel-heading Known Public keys
         br
-        ul
-          li None
+        ul#pub_keys

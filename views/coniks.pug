@@ -10,7 +10,7 @@ block content
       div.panel.panel-default
         div.panel-heading Registration to CONIKS
         br
-        form.form-horizontal(name='coniks_form' method='POST' action='' onsubmit='return coniksRegister()')
+        form#coniks_register_form.form-horizontal(name='coniks_register_form' method='POST' action='' onsubmit='return coniksRegister()')
           .form-group
             label.control-label.col-sm-2(for='username') Username:
             .col-sm-8
