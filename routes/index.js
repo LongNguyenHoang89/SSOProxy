@@ -26,8 +26,9 @@ module.exports = function (passport) {
   router.get('/', function (req, res) {
     if (req.isAuthenticated()) {
       res.redirect('/profile')
+    } else {
+      res.render('index');
     }
-    res.render('index');
   });
 
   router.get('/profile', isLoggedIn, function (req, res) {
