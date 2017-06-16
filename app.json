@@ -8,7 +8,8 @@
   "env": {
     "NODE_ENV": "development",
     "PORT": 8080,
-    "CONIKSCLIENT_PORT": 3001
+    "CONIKSCLIENT_PORT": 3001,
+    "CONIKSSERVER": "https://localhost:8400"
   },
   "env_production": {
     "NODE_ENV": "production"

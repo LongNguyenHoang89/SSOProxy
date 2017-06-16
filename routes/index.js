@@ -2,7 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const http = require('http')
+const https = require('https')
+const util = require('util')
+const request = require('request')
 
 const isLoggedIn = function (req, res, next) {
   // if user is authenticated in the session, call the next() to call the next request handler Passport adds this method
@@ -41,9 +43,10 @@ module.exports = function (passport) {
       headers: {
         'Content-Type': 'text/plain',
         'Content-Length': Buffer.byteLength(postData)
-      }
+      },
+      rejectUnauthorized: false
     };
-    var coniks_req = http.request(options, (coniks_res) => {
+    var coniks_req = https.request(options, (coniks_res) => {
       coniks_res.setEncoding('utf8');
       let message = ''
       let isConiksUp = true;
@@ -93,7 +96,7 @@ module.exports = function (passport) {
       }
       let isConiksUp = false;
       let isRegistered = undefined;
-      let message = "The CONIKS Client is down, cannot know if you are already registered ..."
+      let message = "The CONIKS Client or CONIKS Server is down, cannot know if you are already registered ..."
       res.render('profile', {
         user: req.user,
         coniks_status: {
@@ -114,7 +117,57 @@ module.exports = function (passport) {
   router.get('/coniks', isLoggedIn, function (req, res) {
     res.render('coniks', {
       username: req.user.username,
-      provider: req.user.provider
+      provider: req.user.provider,
+      access_token: req.user.access_token
+    });
+  });
+
+  router.post('/coniksRegistration', function (req, res) {
+    console.log(req.body)
+    req.checkBody('Auth.Username', 'Wrong JSON schema').notEmpty().withMessage(`"Username" in "Auth" is required`)
+    req.checkBody('Auth.AccessToken', 'Wrong JSON schema').notEmpty().withMessage(`"AccessToken" in "Auth" is required`).isAlphanumeric().withMessage(`"AccessToken" in "Auth" must be alphanumeric`)
+    req.checkBody('ConiksRequest', 'Wrong JSON schema').notEmpty().withMessage(`"ConiksRequest" is required`)
+    req.getValidationResult().then(function (result) {
+      if (!result.isEmpty()) {
+        errors = util.inspect(result.useFirstErrorOnly().array())
+        res.status(400).send(`Invalid format: ${errors}\n`);
+        return;
+      }
+      const msg = req.body
+      const usernameAtProvider = msg.Auth.Username
+      const lastIndex = usernameAtProvider.lastIndexOf("@")
+      const username = usernameAtProvider.substring(0, lastIndex)
+      const provider = usernameAtProvider.substring(lastIndex + 1);
+      const accessToken = msg.Auth.AccessToken
+      const coniksRegistrationMsg = msg.ConiksRequest
+
+      const User = require('../models/user');
+      User.count({
+        "username": username,
+        "provider": provider,
+        "access_token": accessToken
+      }, function (err, count) {
+        if (count < 1) {
+          res.status(401).send("Wrong Authentication !")
+        } else if (count > 1) {
+          console.log(`Found more than one user with given username and access token : ${username} - ${provider} - ${accessToken}`)
+          res.status(500).send("Internal error !")
+        } else {
+          const coniksReq = createConiksRequest(JSON.stringify(coniksRegistrationMsg))
+          coniksReq.on('error', (err) => {
+            if ("production" !== process.env.NODE_ENV) {
+              if (err.code === "ECONNRESET") {
+                console.log("Timeout occurs");
+              } else {
+                console.log(`Problem with request: ${err.message}. Is ConiksServer up ?`);
+              }
+            }
+            console.log("Abort")
+            res.status(500).send("Is ConiksServer up ?")
+          });
+          coniksReq.pipe(res);
+        }
+      });
     });
   });
 
@@ -153,4 +206,23 @@ module.exports = function (passport) {
   }));
 
   return router;
+}
+
+function createConiksRequest(msg) {
+  const options = {
+    uri: process.env.CONIKSSERVER || "https://localhost:8400",
+    agentOptions: {
+      rejectUnauthorized: false
+    },
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(msg)
+    },
+    json: true,
+    body: JSON.parse(msg),
+    timeout: 4000
+  };
+  const coniksReq = request.post(options)
+  return coniksReq
 }

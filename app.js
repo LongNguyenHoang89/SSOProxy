@@ -5,6 +5,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator')
+const https = require('https');
+const fs = require('fs')
 
 // Database configuration
 const dbConfig = require('./config/database');
@@ -68,5 +70,11 @@ app.use(function (err, req, res, next) {
 
 module.exports = app;
 
-app.listen(port);
+const key = fs.readFileSync('keys/private.key');
+const cert = fs.readFileSync('keys/localhost.crt');
+const options = {
+  key: key,
+  cert: cert
+};
+https.createServer(options, app).listen(port);
 console.log(`Server started on port: ${port}`);

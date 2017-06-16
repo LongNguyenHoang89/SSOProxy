@@ -1,5 +1,5 @@
 function coniksLookup() {
-  var url = "http://localhost:3001"; //CONIKS Client address
+  var url = "https://localhost:3001"; //CONIKS Client address
   var method = "POST";
   var username = document.getElementById("username").value;
   var postData = `lookup ${username}`;
@@ -39,16 +39,19 @@ function coniksLookup() {
         message = 'Something akward happened. Lookup may have failed ...';
     }
     if (message) {
-      document.getElementById("error_div").innerHTML = `
-        <ul>
-          <li>${message}</li>
-        </ul>
-      `;
+      displayErrorMsg(message)
     } else {
       var form = document.getElementById("coniks_lookup_form");
       form.reset();
     }
   }
+
+  request.onerror = function (err) {
+    console.log(err)
+    const message = 'An error occured at network level. Please check if ConiksClient is up.';
+    displayErrorMsg(message)
+  }
+
   request.open(method, url, async);
 
   request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
@@ -73,4 +76,15 @@ function isUsernameInUL(ulElement, username) {
     i++;
   }
   return found;
+}
+
+function displayErrorMsg(msg) {
+  document.getElementById("error_div").innerHTML = `
+    <ul>
+      <li>${msg}</li>
+    </ul>
+  `;
+  setTimeout(function () {
+    document.getElementById("error_div").innerHTML = ''
+  }, 5000);
 }
