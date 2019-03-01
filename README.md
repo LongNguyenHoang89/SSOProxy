@@ -1,4 +1,7 @@
 # SSOProxy
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/coast-team/SSOProxy.svg)](https://greenkeeper.io/)
+
 CONIKS single sign on proxy. There are two main contributions of this proxy:
 
 - Create a proof-of-concept single sign on system that supports authentication via social network API.
